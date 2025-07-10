@@ -8,25 +8,29 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 
 service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
-folder_id = '17mlh6KoSQlOlIWyFeQH_j30eNxLLH2sP'
-file_names = ['file1.pdf', 'file2.pdf', 'file3.pdf', 'notice.docx', 'pres.pptx', 'data1.xlsx']
-mime_types = ['application/pdf', 'application/pdf', 'application/pdf',
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-              'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
 
-for file_name, mime_type in zip(file_names, mime_types):
+def upload_file(google_service, folder_id, local_folder_name, file_name, file_type):
     file_metadata = {
         'name': file_name,
         'parents': [folder_id]
     }
 
-    media = MediaFileUpload('./data/{0}'.format(file_name), mimetype=mime_type)
+    media = MediaFileUpload(f'./{local_folder_name}/{file_name}', mimetype=file_type)
 
-    service.files().create(
-        body=file_metadata,
-        media_body=media,
-        fields='id'
-    ).execute()
+    query = f"'{folder_id}' in parents and name = '{file_name}' and trashed = false"
+    response = google_service.files().list(q=query, fields="files(id)").execute()
+    files = response.get('files', [])
 
+    if files:
+        file_id = files[0]['id']
+        google_service.files().update(
+            fileId=file_id,
+            media_body=media
+        ).execute()
+    else:
+        google_service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
 
