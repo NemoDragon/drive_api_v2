@@ -1,14 +1,3 @@
-from service.google_drive_api import create_service
-import pandas as pd
-
-CLIENT_SECRET_FILE = '../service/client_secret_google.json'
-API_NAME = 'drive'
-API_VERSION = 'v3'
-SCOPES = ['https://www.googleapis.com/auth/drive']
-
-service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-
-
 def list_all_files_recursive(google_service, main_folder_id, parent_path=''):
     all_files = []
     page_token = None
@@ -34,12 +23,3 @@ def list_all_files_recursive(google_service, main_folder_id, parent_path=''):
             break
 
     return all_files
-
-
-folder_id = '17mlh6KoSQlOlIWyFeQH_j30eNxLLH2sP'
-files = list_all_files_recursive(service, folder_id, parent_path='')
-print(files)
-
-
-df = pd.DataFrame(files)
-print(df)

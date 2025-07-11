@@ -1,12 +1,4 @@
 from googleapiclient.http import MediaFileUpload
-from service.google_drive_api import create_service
-
-CLIENT_SECRET_FILE = '../service/client_secret_google.json'
-API_NAME = 'drive'
-API_VERSION = 'v3'
-SCOPES = ['https://www.googleapis.com/auth/drive']
-
-service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
 
 def upload_file(google_service, folder_id, local_folder_name, file_name, file_type):

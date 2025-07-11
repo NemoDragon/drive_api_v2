@@ -1,19 +1,10 @@
 import os
 import io
-from service.google_drive_api import create_service
 from utils.download_files import download_file
-from upload_files import upload_file
+from utils.upload_files import upload_file
+from utils.create_folders import get_or_create_folder
 from googleapiclient.http import MediaIoBaseDownload
-import pandas as pd
 import hashlib
-
-CLIENT_SECRET_FILE = '../service/client_secret_google.json'
-API_NAME = 'drive'
-API_VERSION = 'v3'
-SCOPES = ['https://www.googleapis.com/auth/drive']
-
-service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-target_folder_id = '1AY8HjaXAj1jy2Bl5rY3dHB7rDMlYZOcz'
 
 
 def file_hash(filepath):
@@ -41,6 +32,11 @@ def remote_file_hash(google_service, file_id):
 
 
 def download_all_pdfs_recursive(google_service, folder_id, parent_path=''):
+
+
+    target_folder_id = get_or_create_folder(google_service, 'pdfs_for_notebookLM')
+    os.makedirs('data', exist_ok=True)
+
     all_files = []
     page_token = None
 
@@ -78,11 +74,3 @@ def download_all_pdfs_recursive(google_service, folder_id, parent_path=''):
             break
 
     return all_files
-
-
-main_folder_id = '17mlh6KoSQlOlIWyFeQH_j30eNxLLH2sP'
-files = download_all_pdfs_recursive(service, main_folder_id, parent_path='')
-print(files)
-
-df = pd.DataFrame(files)
-print(df)
