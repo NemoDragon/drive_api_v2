@@ -1,7 +1,7 @@
-from google_drive_api import create_service
+from service.google_drive_api import create_service
 import pandas as pd
 
-CLIENT_SECRET_FILE = 'client_secret_google.json'
+CLIENT_SECRET_FILE = '../service/client_secret_google.json'
 API_NAME = 'drive'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/drive']

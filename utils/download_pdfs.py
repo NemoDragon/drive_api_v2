@@ -1,13 +1,13 @@
 import os
 import io
-from google_drive_api import create_service
-from download_files import download_file
+from service.google_drive_api import create_service
+from utils.download_files import download_file
 from upload_files import upload_file
 from googleapiclient.http import MediaIoBaseDownload
 import pandas as pd
 import hashlib
 
-CLIENT_SECRET_FILE = 'client_secret_google.json'
+CLIENT_SECRET_FILE = '../service/client_secret_google.json'
 API_NAME = 'drive'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -17,7 +17,6 @@ target_folder_id = '1AY8HjaXAj1jy2Bl5rY3dHB7rDMlYZOcz'
 
 
 def file_hash(filepath):
-    """Hash lokalnego pliku."""
     if not os.path.exists(filepath):
         return None
     hasher = hashlib.md5()
@@ -28,7 +27,6 @@ def file_hash(filepath):
 
 
 def remote_file_hash(google_service, file_id):
-    """Hash pliku PDF z Google Drive (nie zapisuje na dysk)."""
     hasher = hashlib.md5()
     request = google_service.files().get_media(fileId=file_id)
     fh = io.BytesIO()
@@ -55,6 +53,7 @@ def download_all_pdfs_recursive(google_service, folder_id, parent_path=''):
         ).execute()
 
         for file in response.get('files', []):
+            print('in folder: ', parent_path)
             if file['mimeType'] == 'application/vnd.google-apps.folder':
                 subfolder_path = f"{parent_path}/{file['name']}"
                 all_files.extend(download_all_pdfs_recursive(google_service, file['id'], subfolder_path))
