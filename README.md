@@ -1,4 +1,4 @@
-# NotebookLM Task
+# Drive API in Python for NotebookLM Task
 ## 1.	Description
 The aim of this task is to get all files from the google drive folder and add them as the sources for the LLM model in NotebookLM. The python script will also check if any files were updated. 
 
