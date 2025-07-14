@@ -31,10 +31,8 @@ def remote_file_hash(google_service, file_id):
     return hasher.hexdigest()
 
 
-def download_all_pdfs_recursive(google_service, folder_id, parent_path=''):
-
-
-    target_folder_id = get_or_create_folder(google_service, 'pdfs_for_notebookLM')
+def download_all_files_recursive(google_service, folder_id, file_types,  parent_path=''):
+    target_folder_id = get_or_create_folder(google_service, 'files_for_notebookLM')
     os.makedirs('data', exist_ok=True)
 
     all_files = []
@@ -52,8 +50,8 @@ def download_all_pdfs_recursive(google_service, folder_id, parent_path=''):
             print('in folder: ', parent_path)
             if file['mimeType'] == 'application/vnd.google-apps.folder':
                 subfolder_path = f"{parent_path}/{file['name']}"
-                all_files.extend(download_all_pdfs_recursive(google_service, file['id'], subfolder_path))
-            elif file['mimeType'] == 'application/pdf':
+                all_files.extend(download_all_files_recursive(google_service, file['id'], file_types, subfolder_path))
+            elif file['mimeType'] in file_types:
                 file['folder_path'] = parent_path
                 local_folder = 'data'
                 local_path = os.path.join(local_folder, file['name'])
