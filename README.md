@@ -10,7 +10,7 @@ The aim of this task is to get all files from the google drive folder and add th
     -	download_files.py (download file from google drive)
     -	upload_files.py (upload file to google drive)
     -	create_folders.py (create folder/folders in google drive)
-    -	download_pdfs.py (for managing pdfs, it downloads pdfs from google drive folder, put them into “data” folder that is created locally and uploads them on google drive into one folder “pdfs_for_notebookLM”)
+    -	file_service.py (for managing pdfs, docs and slides, it downloads files from google drive folder, put them into “data” folder that is created locally and uploads them on google drive into one folder “files_for_notebookLM”)
 -	client_secret_google.json (necessary file for authorisation)
 -	main.py
 ## 3.	Instructions
