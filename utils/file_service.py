@@ -17,14 +17,20 @@ def file_hash(filepath):
     return hasher.hexdigest()
 
 
-def remote_file_hash(google_service, file_id):
+def remote_file_hash(google_service, file_id, mime_type):
     hasher = hashlib.md5()
-    request = google_service.files().get_media(fileId=file_id)
     fh = io.BytesIO()
+
+    if mime_type == 'application/vnd.google-apps.document' or mime_type == 'application/vnd.google-apps.presentation':
+        request = google_service.files().export_media(fileId=file_id, mimeType='application/pdf')
+    else:
+        request = google_service.files().get_media(fileId=file_id)
+
     downloader = MediaIoBaseDownload(fh, request)
     done = False
     while not done:
         status, done = downloader.next_chunk()
+
     fh.seek(0)
     for chunk in iter(lambda: fh.read(4096), b""):
         hasher.update(chunk)
@@ -57,11 +63,13 @@ def download_all_files_recursive(google_service, folder_id, file_types,  parent_
                 local_path = os.path.join(local_folder, file['name'])
 
                 local_hash = file_hash(local_path)
-                remote_hash = remote_file_hash(google_service, file['id'])
+                remote_hash = remote_file_hash(google_service, file['id'], file['mimeType'])
 
                 if local_hash != remote_hash:
                     print(f"Download or update: {file['name']}")
-                    download_file(google_service, local_folder, file['id'], file['name'])
+                    download_file(google_service, local_folder, file['id'], file['name'], file['mimeType'])
+                    if file['mimeType'] == 'application/vnd.google-apps.document' or file['mimeType'] == 'application/vnd.google-apps.presentation':
+                        file['mimeType'] = 'application/pdf'
                     upload_file(google_service, target_folder_id, local_folder, file['name'], file['mimeType'])
                 else:
                     print(f"File is up to date: {file['name']}")
