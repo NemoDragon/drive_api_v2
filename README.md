@@ -25,9 +25,6 @@ pip install -r requirements.txt
 ```
 python main.py [folder_id_of_google_drive]
 ```
- 
-Folder id example
-<img width="624" height="25" alt="image" src="https://github.com/user-attachments/assets/ab1bcdd4-18d8-4205-8e5f-b97c4765614d" />
 
 ## 4.	Necessary tools for the project:
 -	Google Drive API (GCP) - to iterate through Google Drive folders, download files
