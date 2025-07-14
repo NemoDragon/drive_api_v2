@@ -26,9 +26,8 @@ pip install -r requirements.txt
 python main.py [folder_id_of_google_drive]
 ```
 
-## 4.	Necessary tools for the project:
+## 4.	Requirements:
 -	Google Drive API (GCP) - to iterate through Google Drive folders, download files
 -	GCP project - to use Google Drive API
 -	Python 3.11+
 -	Google account
--	NotebookLM API: Gemini answer: There isn't a public API for directly adding sources from a device to Google NotebookLM. Solution: add all pdfs manually, but they are already grouped/updated by the script.
